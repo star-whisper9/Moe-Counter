@@ -1,6 +1,12 @@
-version: "3"
 services:
   moe-counter:
+    restart: unless-stopped
+    volumes:
+      # Applicable only to SQLite (persistent database).
+      # Important: By default, database write operations are batched (with a maximum delay of one hour).
+      # If the container is restarted, any data currently held in memory will not be persisted to the database.
+      # Please manually create the db file using `touch`; otherwise, Docker will automatically create a directory instead, cause start-up issues.
+      - ./count.db:/app/count.db
     build: .
     ports:
       - "127.0.0.1:9333:3000"
